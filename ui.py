@@ -10,6 +10,11 @@ data = [
     ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
     ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
     ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
+    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
+    ("Hobbies", "Reading, hiking, painting, traveling around the world, and experimenting with new technologies."),
+    ("Favorite Quote", "The only way to do great work is to love what you do. - Steve Jobs"),
+    ("Goals", "To contribute to open source projects and make a positive impact on the tech community."),
+    ("Achievements", "Developed a scalable application that handles millions of transactions per day."),
     ("Hobbies", "Reading, hiking, painting, traveling around the world, and experimenting with new technologies."),
     ("Favorite Quote", "The only way to do great work is to love what you do. - Steve Jobs"),
     ("Goals", "To contribute to open source projects and make a positive impact on the tech community."),
@@ -28,8 +33,11 @@ terminal_height = console.size.height
 first_column_width = 10
 second_column_width = 50
 
+
 # Function to calculate the height of a row considering wrapped text
 def calculate_row_height(first_cell_text, second_cell_text, second_col_width):
+
+
     # First column doesn't wrap
     lines_first_cell = first_cell_text.count('\n') + 1
 
@@ -52,7 +60,11 @@ tables = []
 current_chunk = []
 current_height = 0  # Current accumulated height
 
+max_l = 2 * second_column_width - 8
 for key, value in data:
+    # Max length available for second cell
+    if len(value) > max_l:
+        value = value[:max_l] + "..."
     row_height = calculate_row_height(key, value, second_column_width)
 
     # Add 0 for the line spacing between rows (since pad_edge=False, no extra lines)
