@@ -1,100 +1,70 @@
+import math
+
+from typing import List, Tuple
 from rich.console import Console
 from rich.table import Table
-from rich.columns import Columns
-import textwrap  # Added import
-
-# Sample data with lengthy texts
-data = [
-    ("Name", "Alice"),
-    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
-    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
-    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
-    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
-    ("Bio", "Alice is an engineer with over ten years of experience in developing complex software systems for various industries including finance, healthcare, and logistics."),
-    ("Hobbies", "Reading, hiking, painting, traveling around the world, and experimenting with new technologies."),
-    ("Favorite Quote", "The only way to do great work is to love what you do. - Steve Jobs"),
-    ("Goals", "To contribute to open source projects and make a positive impact on the tech community."),
-    ("Achievements", "Developed a scalable application that handles millions of transactions per day."),
-    ("Hobbies", "Reading, hiking, painting, traveling around the world, and experimenting with new technologies."),
-    ("Favorite Quote", "The only way to do great work is to love what you do. - Steve Jobs"),
-    ("Goals", "To contribute to open source projects and make a positive impact on the tech community."),
-    ("Achievements", "Developed a scalable application that handles millions of transactions per day."),
-    ("Additional Info", "She is passionate about mentoring young engineers and participates in community tech events."),
-    ("Contact", "Email: alice@example.com\nLinkedIn: linkedin.com/in/alice-engineer"),
-    ("Projects", "Project Alpha: A machine learning platform.\nProject Beta: An IoT device network."),
-    ("Publications", "Authored multiple papers on software architecture and system design."),
-    # Add more items as needed
-]
-
-console = Console()
-terminal_height = console.size.height
-
-# Column settings
-first_column_width = 10
-second_column_width = 50
 
 
-# Function to calculate the height of a row considering wrapped text
-def calculate_row_height(first_cell_text, second_cell_text, second_col_width):
+def build_table(
+        data: List[Tuple[str, str]],
+        terminal_height: int,
+        terminal_width: int,
+        columns: int = 3,
+    ) -> list[Table]:
 
-
-    # First column doesn't wrap
-    lines_first_cell = first_cell_text.count('\n') + 1
-
-    # Second column wraps text, handle manual newlines
-    lines_in_second_cell = 0
-    for line in second_cell_text.split('\n'):
-        wrapped_lines = textwrap.wrap(line, width=second_col_width)
-        if not wrapped_lines:
-            # Empty line
-            lines_in_second_cell += 1
-        else:
-            lines_in_second_cell += len(wrapped_lines)
-
-    # Row height is the maximum of the two cells
-    row_height = max(lines_first_cell, lines_in_second_cell)
-    return row_height
-
-# Split data into chunks based on terminal height
-tables = []
-current_chunk = []
-current_height = 0  # Current accumulated height
-
-max_l = 2 * second_column_width - 8
-for key, value in data:
-    # Max length available for second cell
-    if len(value) > max_l:
-        value = value[:max_l] + "..."
-    row_height = calculate_row_height(key, value, second_column_width)
-
-    # Add 0 for the line spacing between rows (since pad_edge=False, no extra lines)
-    total_row_height = row_height
-
-    if current_height + total_row_height > terminal_height - 2:  # Reserve space for table padding
-        # Start a new table
-        tables.append(current_chunk)
-        current_chunk = [(key, value)]
-        current_height = total_row_height
-    else:
-        current_chunk.append((key, value))
-        current_height += total_row_height
-
-# Don't forget to add the last chunk
-if current_chunk:
-    tables.append(current_chunk)
-
-# Build tables for each chunk
-table_renderables = []
-
-for chunk in tables:
-    table = Table(show_header=False, box=None, pad_edge=False)
-    table.add_column(style="green", justify="left", width=first_column_width, no_wrap=True)
-    table.add_column(style="white", justify="left", width=second_column_width, overflow="fold", no_wrap=False)
+    # Split terminal_width into three int
+    table_width = int(math.floor(terminal_width / columns))
+    terminal_height = terminal_height
+    first_column_width: int = 15
+    second_column_width: int = table_width - first_column_width
     
-    for key, value in chunk:
-        table.add_row(key, value)
-    table_renderables.append(table)
+    last_item_index: int = columns * terminal_height
+    if len(data) > last_item_index:
+        data = data[:last_item_index]
+        data.append(("...", ""))
 
-# Render the tables side by side
-console.print(Columns(table_renderables, expand=True))
+    _data = data.copy()
+    data = []
+    for key, value in _data:
+        if len(key) > first_column_width:
+            key = key[:first_column_width-3] + "..."
+
+        value = "  " + value
+        if len(value
+               .replace('[red]','')
+               .replace('[blue]','')
+               .replace('[/blue]','')
+               .replace('[/red]','')
+               .replace('[green]','')
+               .replace('[/green]','')
+               .replace('[magenta]','')
+               .replace('[/magenta]','')
+            ) > second_column_width:
+            value = value[:second_column_width-3] + "..."
+
+        data.append((key, value))
+
+    
+    table_renderables = []
+    for i in range(columns):
+        table = Table(show_header=False, box=None, pad_edge=False)
+        table.add_column(style="magenta", justify="left", width=first_column_width, no_wrap=True)
+        table.add_column(style="white", justify="left", width=second_column_width)
+        
+        for row in data[i*terminal_height:(i+1)*terminal_height]:
+            table.add_row(row[0], row[1])
+        table_renderables.append(table)
+
+    return  table_renderables
+
+if __name__=='__main__':
+    data = [
+        ("a", "Mode "),
+        ("b", "Do that"),
+        # Add more items as needed
+    ]
+    console = Console()
+    terminal_height = console.height
+    printable_table = build_table(data, terminal_height=terminal_height, terminal_width=console.width)
+    console.print(printable_table)
 

@@ -3,4 +3,4 @@
 # author: developer@moonlanders.site
 # date  : dom 15 sep 2024 14:01:54 CEST
 
-alacritty --class 'hedo' -e bash -i -c "find . | entr bash -c 'clear; python3 ui.py'"
+alacritty --class 'hedo' -e bash -i -c "find . | entr bash -c 'clear; python3 main.py'"
