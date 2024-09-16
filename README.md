@@ -10,10 +10,11 @@ A small sidebar for helping i3 command discovery in i3wm-based linux systems.
 - [ ] [rich](https://rich.readthedocs.io/en/stable/)
 - [ ] i3
 
-#### Download
+## Quickstart
 
 1. Download the git repo.
-2. Run.
+2. Configure as described in [usage](#Usage)
+3. Run it from the repo basedir (i.e. where the `main.py` file lives): `python3 main.py`
 
 
 ## Usage
