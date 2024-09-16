@@ -23,15 +23,16 @@ i3 does not support inline commenting. This makes difficult to parse the i3 conf
 
 In order to achive this, HEDO assumes some basic syntax differences from the original i3 syntax:
 
-1. All 'modes' (except for default, since it is not explicitly defined) should be declared with a previous '# bindsym##<mode>' comment, exactly in the preceeding line to the mode declaration. 
+1. All modes (except for default, since it is not explicitly defined) should be declared with a previous comment, `# bindsym##<mode>`, exactly in the preceeding line to the mode declaration. 
 
-2. All bindsym should be preceeded by the description comment, that describes the command that is binded to that key/combination, exactly in the preceeding line to the bindsym declaration.
+2. All bindsym should be preceeded by the description comment, starting by `#desc:`, that describes the command that is binded to that key/combination, exactly in the preceeding line to the bindsym declaration.
 
 And that's all!
 
 #### Example
 
 This is a usual and i3-valid configuration:
+
 ```
 set $hedo "alacritty --class 'hedo' -e bash -i -c 'python3 ~/development/hedo/main.py'"
 
