@@ -102,5 +102,11 @@ As you might see, other than the comments, no further changes are required.
 
 By this configuration, I can see the HEDO sidebar in the `$leftm` output using my alacritty terminal.
 
+Visit the [rich](https://rich.readthedocs.io/en/stable/) documentation to see how you can display colors and other features (e.g. the `[red]` flags on the config file).
+
 The `~/development/hedo/` is the path to the hedo repository.
 
+
+### Screenshots
+
+![screenshot](./assets/images/screenshot.png)
